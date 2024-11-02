@@ -1,0 +1,45 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: .
+    command: python app.py
+    ports:
+      - "5005:5005"
+    depends_on:
+      - load_balancer
+
+  load_balancer:
+    build:
+      context: .
+    command: python load_balancer_server.py
+    ports:
+      - "5004:5004"
+    depends_on:
+      - backend1
+      - backend2
+      - backend3
+
+  backend1:
+    build:
+      context: .
+    command: python backend_server.py 8001
+    ports:
+      - "8001:8001"
+    hostname: server1
+
+  backend2:
+    build:
+      context: .
+    command: python backend_server.py 8002
+    ports:
+      - "8002:8002"
+    hostname: server2
+
+  backend3:
+    build:
+      context: .
+    command: python backend_server.py 8003
+    ports:
+      - "8003:8003"
+    hostname: server3

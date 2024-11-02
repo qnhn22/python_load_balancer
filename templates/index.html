@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Balancer Frontend</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+    <style>
+      /* Basic Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+      }
+
+      /* Container */
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+
+      /* Header */
+      h1 {
+        text-align: center;
+        color: #4A90E2;
+        margin-bottom: 20px;
+      }
+
+      /* Button Styles */
+      button {
+        background-color: #4A90E2;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #357ABD;
+      }
+
+      /* Response Area */
+      .response {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #e7f3fe;
+        border-left: 5px solid #4A90E2;
+        border-radius: 5px;
+      }
+
+      /* Form */
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      /* Dropdown */
+      select {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Load Balancer Test</h1>
+      <form id="requestForm">
+        <label for="algorithm">Choose Load Balancing Algorithm:</label>
+        <select id="algorithm" name="algorithm">
+          <option value="round_robin">Round Robin</option>
+          <option value="least_connections">Least Connections</option>
+          <option value="source_ip_hash">Source IP Hash</option>
+          <option value="weighted_round_robin">Weighted Round Robin</option>
+          <option value="random">Random</option>
+        </select>
+        <button type="submit">Send Request</button>
+      </form>
+      <div class="response" id="responseArea">
+        <!-- Response will be displayed here -->
+      </div>
+    </div>
+    <script>
+      $(document).ready(function () {
+        $("#requestForm").on("submit", function (event) {
+          event.preventDefault(); // Prevent the form from refreshing the page
+
+          // Get the selected algorithm
+          const algorithm = $("#algorithm").val();
+
+          // Send a request to the load balancer with the selected algorithm
+          $.post(`http://localhost:5005?algorithm=${algorithm}`) // Update with your load balancer URL
+            .done(function (data) {
+              console.log(data)
+              // Display the server response and the algorithm used
+              $("#responseArea").html(`
+              <p>Response from server: ${data["server"]}</p>
+              <p>Algorithm used: ${data["algorithm"]}</p>
+            `);
+            })
+            .fail(function () {
+              $("#responseArea").html("<p>Error retrieving response from the server.</p>");
+            });
+        });
+      });
+    </script>
+  </body>
+
+</html>
