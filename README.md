@@ -14,7 +14,7 @@ Additionally, it includes health checks for the backend servers.
 Use Docker to simulate 3 servers and distribute traffic to the servers.
 
 ## Technologies:
-- Python (Flask)
+- Python (Flask, Multi-Threading)
 - HTML/CSS/JavaScript
 - Load Balancer
 - Docker
